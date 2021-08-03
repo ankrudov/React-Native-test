@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{Component} from 'react';
 import { Text, View, ScrollView, StyleSheet,
     Picker, Switch, Button } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker'; 
@@ -31,9 +31,10 @@ class Reservation extends Component{
     render(){
         return(
             <ScrollView>
-                <View>
-                    <Text>Number of Campers</Text>
+                <View style={styles.formRow}>
+                    <Text style={styles.formLabel}>Number of Campers</Text>
                     <Picker
+                        style={styles.formItem}
                         selectedValue={this.state.campers}
                         onValueChange={itemValue => this.setState({campers:itemValue})}>
                             <Picker.Item label='1' value='1'/>
@@ -43,24 +44,25 @@ class Reservation extends Component{
                             <Picker.Item label='5' value='5'/>
                             <Picker.Item label='6' value='6'/>
                     </Picker>
-                    <View>
-                        <Text>Hike in?</Text>
-                        <Switch
-                            value={this.state.hikeIn}
-                            trackColor={{true:'#5637DD',false:null}}
-                            onValueChange={value=>this.setState({hikeIn:value})}
+                </View>
+                <View style={styles.formRow}>
+                    <Text style={styles.formLabel}>Hike in?</Text>
+                    <Switch
+                        style={styles.formItem}
+                        value={this.state.hikeIn}
+                        trackColor={{true:'#5637DD',false:null}}
+                        onValueChange={value=>this.setState({hikeIn:value})}
+                    />
+                </View>
+                <View style={styles.formRow}>
+                    <Text style={styles.formLabel}>Date</Text>
+                    <Button
+                        onPress={()=>
+                            this.setState({showCalendar: !this.state.showCalendar})}
+                        title={this.state.date.toLocaleDateString('en-US')}
+                        color='#5637DD'
+                        accessibilityLabel='Tap me to select reservation date'
                         />
-                    </View>
-                    <View>
-                        <Text>Date</Text>
-                        <Button
-                            onPress={()=>
-                                this.setState({showCalendar: !this.state.showCalendar})}
-                            title={this.state.date.toLocaleDateString('en-US')}
-                            color='#5637DD'
-                            accessibilityLabel='Tap me to select reservation date'
-                            />
-                    </View>
                 </View>
                 {this.state.showCalendar && (
                     <DateTimePicker
@@ -70,9 +72,10 @@ class Reservation extends Component{
                         onChange={(event,selectedDate)=>{
                             selectedDate && this.setState({date:selectedDate,showCalendar:false})
                         }}
+                        style={styles.formItem}
                         />
                 )}
-                <View>
+                <View style={styles.formRow}>
                     <Button
                         onPress={()=>this.handleReservation()}
                         title='Search'
@@ -84,3 +87,21 @@ class Reservation extends Component{
         );
     }
 }
+
+const styles = StyleSheet.create({
+    formRow:{
+        alignItems:'center',
+        justifyContent:'center',
+        flex:1,
+        flexDirection:'row',
+        margin:20
+    },
+    formLabel:{
+        fontSize:18,
+        flex:2
+    },
+    formItem:{
+        flex:1
+    }
+});
+export default Reservation;
