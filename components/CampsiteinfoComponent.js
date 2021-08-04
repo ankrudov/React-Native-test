@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Text, View, ScrollView, FlatList, Modal, Button, StyleSheet } from 'react-native';
 import { Card, Icon, Rating, Input, ThemeConsumer } from 'react-native-elements';
+import {postComment} from '../redux/ActionCreators';
 import {connect} from 'react-redux';
 import {baseUrl} from '../shared/baseUrl';
 
@@ -12,6 +13,9 @@ const mapStateToProps = state =>{
     };
 };
 
+const mapDispatchToProps = {
+    postComment: (campsiteId,rating,author,text)=> postComment(campsiteId,rating,author,text)
+}
 //comment renders
 function RenderCampsite(props){
     const {campsite} = props;
@@ -96,7 +100,7 @@ class CampsiteInfo extends Component{
     }
 
     handleComment(campsiteId){
-        console.log(JSON.stringify(this.state));
+        this.props.postComment(campsiteId,this.state.rating,this.state.author,this.state.text);
         this.toggleModal();
     }
 
@@ -150,7 +154,7 @@ class CampsiteInfo extends Component{
                             placeholder='Comment'
                             leftIcon={{type:'font-awesome',name:'comment-o'}}
                             leftIconContainerStyle={{paddingRight:10}}
-                            onChange={text =>{this.setState({text:text})}}
+                            onChangeText={text =>{this.setState({text:text})}}
                             value={this.state.text}
                          />
                          <View>
@@ -196,4 +200,4 @@ const styles = StyleSheet.create({
         margin:20
     }    
 })
-export default connect(mapStateToProps)(CampsiteInfo);
+export default connect(mapStateToProps,mapDispatchToProps)(CampsiteInfo);
